@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id               String        @id @default(uuid())
+  fullName         String
+  email            String
+  phone            String
+  dateOfBirth      DateTime?
+  addressLine1     String?
+  city             String?
+  state            String?
+  country          String?
+  gender           Boolean
+  password         String
+  documentUrl      String
+  documentNumber   String
+  isVerified       Boolean       @default(false)
+  verificationCode String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  userID           appointment[] @relation("PatientID")
+}
+
+model admin {
+  id           String    @id @default(uuid())
+  fullName     String
+  email        String
+  phone        String
+  dateOfBirth  DateTime?
+  addressLine1 String?
+  city         String?
+  state        String?
+  country      String?
+  gender       Boolean
+  password     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model docter {
+  id             String        @id @default(uuid())
+  fullName       String
+  email          String
+  phone          String
+  dateOfBirth    DateTime?
+  addressLine1   String?
+  city           String?
+  state          String?
+  country        String?
+  gender         Boolean
+  specialization String
+  about          String?
+  avatarUrl      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  appointment    appointment[] @relation("DocterID")
+}
+
+model appointment {
+  id        String @id @default(uuid())
+  patientID String
+  reason    String
+  note      String
+  status    String
+  docterId  String
+  patientid user   @relation("PatientID", fields: [patientID], references: [id])
+  docterid  docter @relation("DocterID", fields: [docterId], references: [id])
+}
