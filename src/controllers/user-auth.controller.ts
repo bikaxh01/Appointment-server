@@ -3,9 +3,9 @@ import { user } from "../models/userModel.interface";
 
 const registerUserController = async (req: Request, res: Response) => {
   const userData: user = req.body;
-
   try {
-    console.log(req.file);
+   console.log(req.body);
+   
   } catch (error) {}
 
   res.json({
