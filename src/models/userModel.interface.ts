@@ -1,7 +1,7 @@
 export interface user {
   fullName: string;
   email: string;
-  phone: string;
+  phone: number;
   dateOfBirth?: string;
   addressLine1?: string;
   documentUrl:string
@@ -10,4 +10,6 @@ export interface user {
   country?: string;
   gender: string;
   password: string;
+  verificationCode:number
+  documentNumber: string
 }

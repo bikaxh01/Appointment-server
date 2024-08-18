@@ -28,25 +28,20 @@ export const uploadDocumentToS3 = async (
 
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
-    Key: `Documents/${req.body.fullName}`,
+    Key: `Documents/${documentMetaData.filename}`,
     Body: fileStream,
     ContentType: documentMetaData?.mimetype,
   });
 
   try {
-    console.log('🚀Uploading Document.....');
-    
     const response = await client.send(command);
     fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error(`Error removing file: ${err}`);
-          return;
-        }
-      
-        console.log(`File ${filePath} has been successfully removed.`);
-      });
-    const documentUrl = `https://s3.amazonaws.com/${BUCKET_NAME}/Documents/${req.body.fullName}`;
-    req.body.documentUrl = documentUrl
+      if (err) {
+        return;
+      }
+    });
+    const documentUrl = `https://s3.amazonaws.com/${BUCKET_NAME}/Documents/${documentMetaData.filename}`;
+    req.body.documentUrl = documentUrl;
     next();
   } catch (err) {
     console.error(err);
