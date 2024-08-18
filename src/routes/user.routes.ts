@@ -5,7 +5,7 @@ import { isRequestValidated } from "../models/user-requestVlidator";
 import upload from "../utils/multer";
 import { uploadDocumentToS3 } from "../utils/docUploader.S3";
 
-export const userRoute = Router();
+ const userRoute = Router();
 
 
 
@@ -14,3 +14,7 @@ userRoute.get("/", (req, res) => {
 });
 
 userRoute.post('/auth/register-user',upload.single('document'),uploadDocumentToS3,registerUserController)
+
+export {
+  userRoute
+}

@@ -6,8 +6,8 @@ import { adminRoute } from './routes/admin.routes'
 import bodyParser from 'body-parser'
 const app = express()
 app.use(express.urlencoded({extended:true}))
-app.get('/',(req,res:Response)=>{
 
+app.get('/',(req,res:Response)=>{
     res.status(200).json({
         success:true,
         message:'Server is Running '
