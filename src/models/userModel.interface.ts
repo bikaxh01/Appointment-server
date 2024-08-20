@@ -1,15 +1,25 @@
-export interface user {
+import { Gender, AppointmentStatus } from "@prisma/client";
+
+export interface userModel {
   fullName: string;
   email: string;
   phone: number;
   dateOfBirth?: string;
   addressLine1?: string;
-  documentUrl:string
+  documentUrl: string;
   city?: string;
   state?: string;
   country?: string;
-  gender: string;
+  gender: Gender;
   password: string;
-  verificationCode:number
-  documentNumber: string
+  verificationCode: number;
+  documentNumber: string;
+}
+
+export interface AppointmentModel {
+  patientID: string;
+  reason: string;
+  note: string;
+  status: AppointmentStatus;
+  doctorId: string;
 }
