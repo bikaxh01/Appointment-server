@@ -67,11 +67,13 @@ model appointment {
   id        String            @id @default(uuid())
   patientID String
   reason    String
-  note      String
+  note      String?
   status    AppointmentStatus @default(PENDING)
-  doctorId  String
+  doctorId  String?
+  startTime DateTime
+  endTime   DateTime
   patientid user              @relation("PatientID", fields: [patientID], references: [id])
-  doctorid  doctor            @relation("DoctorID", fields: [doctorId], references: [id])
+  doctorid  doctor?            @relation("DoctorID", fields: [doctorId], references: [id])
 }
 
 enum Gender {

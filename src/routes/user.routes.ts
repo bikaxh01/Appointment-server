@@ -5,6 +5,7 @@ import { isRequestValidated } from "../models/user-requestVlidator";
 import upload from "../utils/multer";
 import { uploadDocumentToS3 } from "../utils/docUploader.S3";
 import { validateAppointmentDataRequest } from "../models/AppointmentDataValidator";
+import { getAvailableTimeSlotsController } from "../controllers/appointment";
 
  const userRoute = Router();
 
@@ -18,7 +19,7 @@ userRoute.post('/auth/register-user',validateUserRegisterRequest,isRequestValida
 userRoute.post('/auth/verify-user',verifyUserController)
 userRoute.post('/create-appointment',validateAppointmentDataRequest,isRequestValidated,createAppointmentController)
 userRoute.post('/upload-document',upload.single('document'),uploadDocumentToS3,uploadDocumentController)
-
+userRoute.post('/getAppointmentTime',getAvailableTimeSlotsController)
 export {
   userRoute
 }
