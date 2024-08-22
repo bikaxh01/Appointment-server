@@ -6,6 +6,8 @@ import { sendResponse } from "../utils/response";
 import bcrypt from "bcryptjs";
 import { sendEmail } from "../utils/resend";
 import { Gender } from "@prisma/client";
+import { sign } from "jsonwebtoken";
+import { JWT_SECRET } from "../config/EnvConfigs";
 const bcryptSalt = 10;
 //Register user
 const registerUserController = async (req: Request, res: Response) => {
@@ -58,6 +60,45 @@ const registerUserController = async (req: Request, res: Response) => {
       error.message,
       500
     );
+  }
+};
+
+//User-SignIn
+
+const userSignInController = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const getUser = await prisma_client.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!getUser) {
+      return sendResponse(res, false, "User not found", [], 404);
+    }
+
+    const matchPW = await bcrypt.compare(password, getUser.password);
+
+    if (!matchPW) {
+      return sendResponse(res, false, "Incorrect password", [], 400);
+    }
+
+    const token = sign(
+      {
+        email: getUser.email,
+        id: getUser.id,
+        fullName: getUser.fullName
+      },
+      JWT_SECRET
+    );
+    
+
+    res.cookie("Authorization", token);
+    sendResponse(res, true, "Logged In successful", [], 200);
+  } catch (error) {
+    sendResponse(res, false, "Internal Server Error", [], 500);
   }
 };
 
@@ -189,8 +230,5 @@ export {
   registerUserController,
   uploadDocumentController,
   verifyUserController,
+  userSignInController
 };
-
-
-
-
