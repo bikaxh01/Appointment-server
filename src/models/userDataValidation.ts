@@ -8,4 +8,5 @@ export const validateUserRegisterRequest = [
     .withMessage("invalid email Address"),
 
   check("password").notEmpty().withMessage("Password is required"),
+  check("documentNumber").notEmpty().withMessage("Document Number is required"),
 ];

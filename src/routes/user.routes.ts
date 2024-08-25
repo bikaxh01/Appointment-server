@@ -19,7 +19,7 @@ userRoute.post('/auth/register-user',validateUserRegisterRequest,isRequestValida
 userRoute.post('/auth/signIn',validateUserRegisterRequest,isRequestValidated,userSignInController)
 userRoute.post('/auth/verify-user',verifyUserController)
 userRoute.post('/create-appointment',validateAppointmentDataRequest,isRequestValidated,createAppointmentController)
-userRoute.post('/upload-document',upload.single('document'),uploadDocumentToS3,uploadDocumentController)
+userRoute.post('/upload-document',upload.single('file'),uploadDocumentToS3,uploadDocumentController)
 userRoute.post('/getAppointmentTime',getAvailableTimeSlotsController)
 export {
   userRoute

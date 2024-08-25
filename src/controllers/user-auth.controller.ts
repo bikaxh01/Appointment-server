@@ -214,7 +214,7 @@ const createAppointmentController = async (req: Request, res: Response) => {
     sendResponse(
       res,
       true,
-      "Appointment Registered Seccessfully",
+      "Appointment Registered Successfully",
       createAppointment,
       200
     );

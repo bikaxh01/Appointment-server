@@ -3,7 +3,7 @@ import { Gender, AppointmentStatus } from "@prisma/client";
 export interface userModel {
   fullName: string;
   email: string;
-  phone: number;
+  phone: string;
   dateOfBirth?: string;
   addressLine1?: string;
   documentUrl: string;
