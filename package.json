@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon ./src/index.ts ",
-    "start": "tsc -b && node ./dist/index.js"
+    "start": "npm i && tsc -b && node ./dist/index.js"
+
   },
   "author": "",
   "license": "ISC",
