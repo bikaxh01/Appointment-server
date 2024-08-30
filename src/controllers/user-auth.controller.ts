@@ -75,6 +75,7 @@ const userSignInController = async (req: Request, res: Response) => {
       },
     });
 
+ 
     if (!getUser) {
       return sendResponse(res, false, "User not found", [], 404);
     }
@@ -84,19 +85,8 @@ const userSignInController = async (req: Request, res: Response) => {
     if (!matchPW) {
       return sendResponse(res, false, "Incorrect password", [], 400);
     }
-
-    const token = sign(
-      {
-        email: getUser.email,
-        id: getUser.id,
-        fullName: getUser.fullName
-      },
-      JWT_SECRET
-    );
-    
-
-    res.cookie("Authorization", token);
-    sendResponse(res, true, "Logged In successful", [], 200);
+      
+    sendResponse(res, true, "Logged In successful", getUser, 200);
   } catch (error) {
     sendResponse(res, false, "Internal Server Error", [], 500);
   }
@@ -230,5 +220,5 @@ export {
   registerUserController,
   uploadDocumentController,
   verifyUserController,
-  userSignInController
+  userSignInController,
 };

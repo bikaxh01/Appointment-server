@@ -23,6 +23,7 @@ model user {
   documentNumber   String
   isVerified       Boolean       @default(false)
   verificationCode Int
+  userType    String @default("user")
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   userID           appointment[] @relation("PatientID")
@@ -40,6 +41,7 @@ model admin {
   country      String?
   gender       Gender
   password     String
+  userType    String @default("admin")
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
@@ -58,6 +60,7 @@ model doctor {
   specialization String
   about          String?
   avatarUrl      String?
+  userType    String @default("doctor")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   appointment    appointment[] @relation("DoctorID")
