@@ -124,7 +124,7 @@ const verifyUserController = async (req: Request, res: Response) => {
     }
 
     const matchVerificationCode: boolean =
-      getUser.verificationCode === verificationCode;
+      getUser.verificationCode === Number(verificationCode)
     if (!matchVerificationCode) {
       return sendResponse(res, false, "Incorrect Verification Code", [], 400);
     }
@@ -215,10 +215,35 @@ const createAppointmentController = async (req: Request, res: Response) => {
   }
 };
 
+const getAllAppointmentByUserController = async (req:Request,res:Response)=>{
+   const {userId} = req.query
+
+   try {
+    
+    if(!userId || typeof userId !== "string"){
+      return sendResponse(res,false,"Invalid user Id",[],400)
+    }
+
+    const getAppointments  = await prisma_client.appointment.findMany({
+      where:{
+        patientID:userId
+      }
+    })
+
+    sendResponse(res,true,"Successfully Fetched",getAppointments,200)
+
+   } catch (error) {
+    console.log("🚀 ~ getAllAppointmentByUser ~ error:", error)
+    
+    sendResponse(res, false, "Internal Server Error", [], 500);
+   }
+}
+
 export {
   createAppointmentController,
   registerUserController,
   uploadDocumentController,
   verifyUserController,
   userSignInController,
+  getAllAppointmentByUserController
 };

@@ -77,6 +77,7 @@ model appointment {
   endTime   DateTime
   patientid user              @relation("PatientID", fields: [patientID], references: [id])
   doctorid  doctor?            @relation("DoctorID", fields: [doctorId], references: [id])
+  createdAt   DateTime @default(now())
 }
 
 enum Gender {
