@@ -6,6 +6,8 @@ import { adminRoute } from './routes/admin.routes'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { doctorRoute } from './routes/doctors.routes'
+import { createDoctor } from './controllers/doctors.controller'
 const app = express()
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
@@ -21,6 +23,7 @@ app.get('/',(req,res:Response)=>{
 
 app.use('/apis/user',userRoute)
 app.use('/apis/admin',adminRoute)
+app.use('/apis/doctors',doctorRoute)
 
 
 app.listen(PORT,()=>console.log(`Running at ${PORT}`)

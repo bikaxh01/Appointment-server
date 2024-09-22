@@ -7,8 +7,7 @@ import { uploadDocumentToS3 } from "../utils/docUploader.S3";
 import { validateAppointmentDataRequest } from "../models/AppointmentDataValidator";
 import { getAvailableTimeSlotsController } from "../controllers/appointment";
 
- const userRoute = Router();
-
+const userRoute = Router();
 
 
 userRoute.get("/", (req, res) => {

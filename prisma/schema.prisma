@@ -57,6 +57,7 @@ model doctor {
   state          String?
   country        String?
   gender         Gender
+  password       String
   specialization String
   about          String?
   avatarUrl      String?

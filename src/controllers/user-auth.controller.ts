@@ -239,11 +239,12 @@ const getAllAppointmentByUserController = async (req:Request,res:Response)=>{
    }
 }
 
+
 export {
   createAppointmentController,
   registerUserController,
   uploadDocumentController,
   verifyUserController,
   userSignInController,
-  getAllAppointmentByUserController
+  getAllAppointmentByUserController,
 };

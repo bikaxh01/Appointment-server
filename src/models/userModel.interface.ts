@@ -20,8 +20,24 @@ export interface AppointmentModel {
   patientID: string;
   reason: string;
   note: string;
-  startTime  :Date;
-  endTime   : Date;
+  startTime: Date;
+  endTime: Date;
   status: AppointmentStatus;
   doctorId: string;
+}
+
+export interface Doctor {
+  fullName: string;
+  email: string;
+  phone: string;
+  dateOfBirth?: string;
+  addressLine1?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  gender: Gender;
+  password: string;
+  specialization: string;
+  about?: string;
+  avatarUrl?: string;
 }
