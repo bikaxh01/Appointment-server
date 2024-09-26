@@ -37,7 +37,7 @@ export interface Doctor {
   country?: string;
   gender: Gender;
   password: string;
-  specialization: string;
+  specializationID: string;
   about?: string;
   avatarUrl?: string;
 }

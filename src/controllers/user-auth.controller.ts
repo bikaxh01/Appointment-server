@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { AppointmentModel, userModel } from "../models/userModel.interface";
 import { prisma_client } from "../config/prismaClient";
 import { customAlphabet } from "nanoid";
@@ -13,7 +13,7 @@ const bcryptSalt = 10;
 const registerUserController = async (req: Request, res: Response) => {
   try {
     const userData: userModel = req.body;
-
+   
     if (!userData.email) {
       return sendResponse(res, false, "Invalid email", [], 400);
     }
@@ -67,6 +67,7 @@ const registerUserController = async (req: Request, res: Response) => {
 
 const userSignInController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  
 
   try {
     const getUser = await prisma_client.user.findUnique({
@@ -239,6 +240,42 @@ const getAllAppointmentByUserController = async (req:Request,res:Response)=>{
    }
 }
 
+const validateEmailController = async (req:Request,res:Response)=>{
+
+  const {email} = req.query
+
+  try {
+    if(!email || typeof email !== "string"){
+      return sendResponse(res,false,"Invalid  Email",[],400)
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+     const validateEmailFormat = emailRegex.test(email)
+
+     if(!validateEmailFormat){
+      return sendResponse(res,false,"Invalid Email format",[],400)
+     }
+
+     const checkEmail = await prisma_client.user.findUnique({
+      where:{
+        email
+      }
+     })
+
+     if(checkEmail){
+      return sendResponse(res,false,"Email format already registered",[],400)
+     }
+     sendResponse(res,false,"Looks Great 😲",[],200)
+     
+    } catch (error:any) {
+      console.log("🚀 ~ validateEmail ~ error:", error.message)
+      
+    sendResponse(res,false,"Error occured while validating Email ",[],400)
+    
+  }
+
+}
+
 
 export {
   createAppointmentController,
@@ -246,5 +283,6 @@ export {
   uploadDocumentController,
   verifyUserController,
   userSignInController,
+  validateEmailController,
   getAllAppointmentByUserController,
 };

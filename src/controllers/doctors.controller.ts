@@ -42,7 +42,7 @@ const createDoctor = async (req: Request, res: Response) => {
       select: {
         fullName: true,
         email: true,
-        specialization: true,
+        specializationID: true,
         gender: true,
         about: true,
       },
@@ -50,7 +50,8 @@ const createDoctor = async (req: Request, res: Response) => {
 
     sendResponse(res, true, "Doctors created successfully", newDoctor, 200);
   } catch (error: any) {
-    console.log(error);
+    console.log("🚀 ~ createDoctor ~ error:", error);
+
     sendResponse(
       res,
       false,
@@ -58,11 +59,53 @@ const createDoctor = async (req: Request, res: Response) => {
       error.message,
       500
     );
-    
   }
 };
 
-export { allDoctors,
-  createDoctor
+const getSpecializationController = async (req: Request, res: Response) => {
+  try {
+    const getSpecialization =
+      await prisma_client.specializationCategory.findMany();
+    sendResponse(res, true, "Successfully fetched", getSpecialization, 200);
+  } catch (error: any) {
+    console.log("🚀 ~ getSpecializationController ~ error:", error);
+    sendResponse(
+      res,
+      false,
+      "Error occurred while fetching specialization",
+      error.message,
+      500
+    );
+  }
+};
 
- };
+const getDoctorOfSpecializationController = async (
+  req: Request,
+  res: Response
+) => {
+  const { specializationID } = req.query;
+
+  try {
+    if (!specializationID || typeof specializationID !== "string") {
+      return sendResponse(res, false, "Invalid  specialization ID", [], 400);
+    }
+
+    const getDoctors = await prisma_client.doctor.findMany({
+      where: {
+        specializationID,
+      },
+    });
+
+    sendResponse(res, true, "Successfully fetched", getDoctors, 200);
+  } catch (error:any) {
+    console.log("🚀 ~ getDoctorOfSpecializationController ~ error:", error);
+    sendResponse(
+      res,
+      false,
+      "Error occurred while fetching specialization",
+      error.message,
+      500
+    );
+  }
+};
+export { allDoctors, createDoctor, getSpecializationController,getDoctorOfSpecializationController };

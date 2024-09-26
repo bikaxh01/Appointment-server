@@ -7,7 +7,6 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { doctorRoute } from './routes/doctors.routes'
-import { createDoctor } from './controllers/doctors.controller'
 const app = express()
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())

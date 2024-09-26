@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { userRoute } from "./user.routes";
-import { allDoctors, createDoctor } from "../controllers/doctors.controller";
+
+import { allDoctors, createDoctor, getDoctorOfSpecializationController, getSpecializationController } from "../controllers/doctors.controller";
 
 const doctorRoute = Router()
 
@@ -10,7 +10,8 @@ doctorRoute.get("/", (req,res) => {
 });
 
 doctorRoute.get("/all-doctors", allDoctors)
-
+doctorRoute.get("/specialization", getSpecializationController)
+doctorRoute.get("/get-specialist-doctors", getDoctorOfSpecializationController)
 doctorRoute.post("/create-doctor",createDoctor)
 
 export{

@@ -31,7 +31,7 @@ async function getAvailableTimeSlotsController(req:Request,res:Response) {
   // Define the working hours and appointment duration (in minutes)
   const workingHoursStart = new Date(`${date}T09:00:00Z`); // e.g., 9:00 AM
   const workingHoursEnd = new Date(`${date}T17:00:00Z`); // e.g., 5:00 PM
-  const appointmentDuration = 20 * 60 * 1000; // 20 minutes in milliseconds
+  const appointmentDuration = 45 * 60 * 1000; // 20 minutes in milliseconds
 
   // Initialize available slots array
   const availableSlots = [];

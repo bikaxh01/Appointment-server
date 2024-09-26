@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createAppointmentController, getAllAppointmentByUserController, registerUserController,uploadDocumentController,userSignInController,verifyUserController } from "../controllers/user-auth.controller";
+import { createAppointmentController, getAllAppointmentByUserController, registerUserController,uploadDocumentController,userSignInController,validateEmailController,verifyUserController } from "../controllers/user-auth.controller";
 import {validateUserRegisterRequest } from '../models/userDataValidation'
 import { isRequestValidated } from "../models/user-requestVlidator";
 import upload from "../utils/multer";
@@ -21,6 +21,7 @@ userRoute.post('/create-appointment',validateAppointmentDataRequest,isRequestVal
 userRoute.post('/upload-document',upload.single('file'),uploadDocumentToS3,uploadDocumentController)
 userRoute.post('/getAppointmentTime',getAvailableTimeSlotsController)
 userRoute.get('/get-appointments',getAllAppointmentByUserController)
+userRoute.get('/validate-email',validateEmailController)
 export {
   userRoute
 }
