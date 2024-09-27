@@ -18,11 +18,10 @@ export interface userModel {
 
 export interface AppointmentModel {
   patientID: string;
-  reason: string;
-  note: string;
+  description?: string;
   startTime: Date;
   endTime: Date;
-  status: AppointmentStatus;
+  date :string;
   doctorId: string;
 }
 

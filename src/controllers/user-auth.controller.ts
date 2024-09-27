@@ -8,12 +8,14 @@ import { sendEmail } from "../utils/resend";
 import { Gender } from "@prisma/client";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../config/EnvConfigs";
+import { createDateTime } from "../config/createDate";
+
 const bcryptSalt = 10;
 //Register user
 const registerUserController = async (req: Request, res: Response) => {
   try {
     const userData: userModel = req.body;
-   
+
     if (!userData.email) {
       return sendResponse(res, false, "Invalid email", [], 400);
     }
@@ -67,7 +69,6 @@ const registerUserController = async (req: Request, res: Response) => {
 
 const userSignInController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  
 
   try {
     const getUser = await prisma_client.user.findUnique({
@@ -76,7 +77,6 @@ const userSignInController = async (req: Request, res: Response) => {
       },
     });
 
- 
     if (!getUser) {
       return sendResponse(res, false, "User not found", [], 404);
     }
@@ -86,7 +86,7 @@ const userSignInController = async (req: Request, res: Response) => {
     if (!matchPW) {
       return sendResponse(res, false, "Incorrect password", [], 400);
     }
-      
+
     sendResponse(res, true, "Logged In successful", getUser, 200);
   } catch (error) {
     sendResponse(res, false, "Internal Server Error", [], 500);
@@ -125,7 +125,7 @@ const verifyUserController = async (req: Request, res: Response) => {
     }
 
     const matchVerificationCode: boolean =
-      getUser.verificationCode === Number(verificationCode)
+      getUser.verificationCode === Number(verificationCode);
     if (!matchVerificationCode) {
       return sendResponse(res, false, "Incorrect Verification Code", [], 400);
     }
@@ -166,7 +166,16 @@ const verifyUserController = async (req: Request, res: Response) => {
 };
 
 const createAppointmentController = async (req: Request, res: Response) => {
-  const appointmentData: AppointmentModel = req.body;
+  const body = req.body;
+
+  const getStartNdEndTime = createDateTime(body.date, body.startTime);
+  body.startTime = getStartNdEndTime.startTime;
+  body.endTime = getStartNdEndTime.endTime;
+  delete body.time
+  delete body.specialist
+
+  const appointmentData: AppointmentModel = body;
+  
 
   try {
     if (!appointmentData.patientID) {
@@ -175,7 +184,6 @@ const createAppointmentController = async (req: Request, res: Response) => {
     if (!appointmentData.doctorId) {
       return sendResponse(res, false, "Invalid Doctor...", [], 400);
     }
-
     const checkUser = await prisma_client.user.findUnique({
       where: {
         id: appointmentData.patientID,
@@ -186,14 +194,12 @@ const createAppointmentController = async (req: Request, res: Response) => {
         id: appointmentData.doctorId,
       },
     });
-
     if (!checkUser) {
       return sendResponse(res, false, "User doesn't exists...", [], 404);
     }
     if (!checkDoctor) {
       return sendResponse(res, false, "Doctor doesn't exists...", [], 404);
     }
-
     const createAppointment = await prisma_client.appointment.create({
       data: { ...appointmentData },
       select: {
@@ -201,7 +207,6 @@ const createAppointmentController = async (req: Request, res: Response) => {
         status: true,
       },
     });
-
     sendResponse(
       res,
       true,
@@ -216,66 +221,70 @@ const createAppointmentController = async (req: Request, res: Response) => {
   }
 };
 
-const getAllAppointmentByUserController = async (req:Request,res:Response)=>{
-   const {userId} = req.query
-
-   try {
-    
-    if(!userId || typeof userId !== "string"){
-      return sendResponse(res,false,"Invalid user Id",[],400)
-    }
-
-    const getAppointments  = await prisma_client.appointment.findMany({
-      where:{
-        patientID:userId
-      }
-    })
-
-    sendResponse(res,true,"Successfully Fetched",getAppointments,200)
-
-   } catch (error) {
-    console.log("🚀 ~ getAllAppointmentByUser ~ error:", error)
-    
-    sendResponse(res, false, "Internal Server Error", [], 500);
-   }
-}
-
-const validateEmailController = async (req:Request,res:Response)=>{
-
-  const {email} = req.query
+const getAllAppointmentByUserController = async (
+  req: Request,
+  res: Response
+) => {
+  const { userId } = req.query;
 
   try {
-    if(!email || typeof email !== "string"){
-      return sendResponse(res,false,"Invalid  Email",[],400)
+    if (!userId || typeof userId !== "string") {
+      return sendResponse(res, false, "Invalid user Id", [], 400);
+    }
+
+    const getAppointments = await prisma_client.appointment.findMany({
+      where: {
+        patientID: userId,
+      },include:{
+        doctorid:true
+      }
+    });
+
+    sendResponse(res, true, "Successfully Fetched", getAppointments, 200);
+  } catch (error) {
+    console.log("🚀 ~ getAllAppointmentByUser ~ error:", error);
+
+    sendResponse(res, false, "Internal Server Error", [], 500);
+  }
+};
+
+const validateEmailController = async (req: Request, res: Response) => {
+  const { email } = req.query;
+
+  try {
+    if (!email || typeof email !== "string") {
+      return sendResponse(res, false, "Invalid  Email", [], 400);
     }
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-     const validateEmailFormat = emailRegex.test(email)
+    const validateEmailFormat = emailRegex.test(email);
 
-     if(!validateEmailFormat){
-      return sendResponse(res,false,"Invalid Email format",[],400)
-     }
+    if (!validateEmailFormat) {
+      return sendResponse(res, false, "Invalid Email format", [], 400);
+    }
 
-     const checkEmail = await prisma_client.user.findUnique({
-      where:{
-        email
-      }
-     })
+    const checkEmail = await prisma_client.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-     if(checkEmail){
-      return sendResponse(res,false,"Email format already registered",[],400)
-     }
-     sendResponse(res,false,"Looks Great 😲",[],200)
-     
-    } catch (error:any) {
-      console.log("🚀 ~ validateEmail ~ error:", error.message)
-      
-    sendResponse(res,false,"Error occured while validating Email ",[],400)
-    
+    if (checkEmail) {
+      return sendResponse(
+        res,
+        false,
+        "Email format already registered",
+        [],
+        400
+      );
+    }
+    sendResponse(res, false, "Looks Great 😲", [], 200);
+  } catch (error: any) {
+    console.log("🚀 ~ validateEmail ~ error:", error.message);
+
+    sendResponse(res, false, "Error occured while validating Email ", [], 400);
   }
-
-}
-
+};
 
 export {
   createAppointmentController,

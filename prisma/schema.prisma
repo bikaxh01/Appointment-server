@@ -77,12 +77,12 @@ model specializationCategory {
 model appointment {
   id        String            @id @default(uuid())
   patientID String
-  reason    String
-  note      String?
+  description      String?
   status    AppointmentStatus @default(PENDING)
-  doctorId  String?
+  doctorId  String
   startTime DateTime
   endTime   DateTime
+  date String
   patientid user              @relation("PatientID", fields: [patientID], references: [id])
   doctorid  doctor?           @relation("DoctorID", fields: [doctorId], references: [id])
   createdAt DateTime          @default(now())
@@ -95,5 +95,6 @@ enum Gender {
 
 enum AppointmentStatus {
   PENDING
-  CONFIRM
+  COMPLETED
+  CANCELLED
 }
